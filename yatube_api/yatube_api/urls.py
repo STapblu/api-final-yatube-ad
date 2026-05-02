@@ -1,9 +1,10 @@
-from django.contrib import admin
-from django.urls import include, path
-from django.views.generic import TemplateView
+from django.contrib import admin  # type: ignore
+from django.urls import include, path  # type: ignore
+from django.views.generic import TemplateView  # type: ignore
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1/', include('api.urls')),
     path('api/', include('api.urls')),
     path(
         'redoc/',
@@ -11,4 +12,3 @@ urlpatterns = [
         name='redoc'
     ),
 ]
-
