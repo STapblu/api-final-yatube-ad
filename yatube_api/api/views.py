@@ -1,5 +1,5 @@
-from rest_framework import viewsets, permissions, pagination, status  # type: ignore
-from rest_framework.response import Response  # type: ignore
+from rest_framework import viewsets, permissions, pagination  # type: ignore
+# from rest_framework.response import  # type: ignore
 from django.shortcuts import get_object_or_404  # type: ignore
 
 from posts.models import Post, Comment, Group, Follow

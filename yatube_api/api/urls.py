@@ -1,9 +1,7 @@
 from django.urls import path  # type: ignore
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)  # type: ignore
+from rest_framework_simplejwt.views import TokenObtainPairView  # type: ignore
+from rest_framework_simplejwt.views import TokenVerifyView  # type: ignore
+from rest_framework_simplejwt.views import TokenRefreshView  # type: ignore
 from .views import PostViewSet, CommentViewSet, GroupViewSet, FollowViewSet
 
 urlpatterns = [
@@ -14,15 +12,22 @@ urlpatterns = [
 
     # Posts
     path('posts/',
-         PostViewSet.as_view({'get': 'list', 'post': 'create'}), name='post-list'),
-    path('posts/<int:id>/', PostViewSet.as_view({'get': 'retrieve', 'put': 'update',
-         'patch': 'partial_update', 'delete': 'destroy'}), name='post-detail'),
+         PostViewSet.as_view(
+             {'get': 'list', 'post': 'create'}), name='post-list'),
+    path('posts/<int:id>/', PostViewSet.as_view(
+         {'get': 'retrieve', 'put': 'update',
+          'patch': 'partial_update', 'delete': 'destroy'}),
+         name='post-detail'),
 
     # Comments (вложенные)
     path('posts/<int:post_id>/comments/',
-         CommentViewSet.as_view({'get': 'list', 'post': 'create'}), name='comment-list'),
+         CommentViewSet.as_view({'get': 'list', 'post': 'create'}),
+         name='comment-list'),
     path('posts/<int:post_id>/comments/<int:id>/', CommentViewSet.as_view(
-        {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='comment-detail'),
+        {
+            'get': 'retrieve',
+            'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}),
+         name='comment-detail'),
 
     # Groups
     path('groups/', GroupViewSet.as_view({'get': 'list'}), name='group-list'),
@@ -31,5 +36,6 @@ urlpatterns = [
 
     # Follows
     path('follow/',
-         FollowViewSet.as_view({'get': 'list', 'post': 'create'}), name='follow-list'),
+         FollowViewSet.as_view({'get': 'list', 'post': 'create'}),
+         name='follow-list'),
 ]
