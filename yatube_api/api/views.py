@@ -1,14 +1,10 @@
-from rest_framework import viewsets, permissions, pagination  # type: ignore
-# from rest_framework.response import  # type: ignore
-from django.shortcuts import get_object_or_404  # type: ignore
+from rest_framework import viewsets, generics, permissions  # type:ignore
+from rest_framework.pagination import LimitOffsetPagination  # type:ignore
+from django.shortcuts import get_object_or_404  # type:ignore
 
 from posts.models import Post, Comment, Group, Follow
 from .serializers import PostSerializer, CommentSerializer, GroupSerializer, \
     FollowSerializer
-
-
-class LimitOffsetPagination(pagination.LimitOffsetPagination):
-    pass
 
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
@@ -21,11 +17,12 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().order_by('-pub_date')
+    queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsAuthorOrReadOnly]
     pagination_class = LimitOffsetPagination
+    lookup_url_kwarg = 'pk'
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -35,6 +32,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
+    lookup_url_kwarg = 'pk'
 
     def get_queryset(self):
         return Comment.objects.filter(post_id=self.kwargs.get('post_id'))
@@ -48,9 +46,10 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.AllowAny]
+    lookup_url_kwarg = 'pk'
 
 
-class FollowViewSet(viewsets.ListCreateAPIView):
+class FollowViewSet(generics.ListCreateAPIView):
     serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated]
 
